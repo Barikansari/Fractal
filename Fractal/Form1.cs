@@ -96,6 +96,10 @@ namespace Fractal
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveState(-2.025, -1.125, 0.6, 1.125);
+            using (StreamWriter sw = File.CreateText("colorstate.txt"))
+            {
+                sw.WriteLine(0);
+            }
             Application.Restart();
             
         }
@@ -131,7 +135,14 @@ namespace Fractal
 
         private void changeColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mandelbrot(new Random().Next(1, 8));
+            int temp = new Random().Next(1, 8);
+            mandelbrot(temp);
+
+            using (StreamWriter sw = File.CreateText("colorstate.txt"))
+            {
+                sw.WriteLine(temp);
+            }
+
             update();
         }
 
@@ -200,7 +211,17 @@ namespace Fractal
                 }
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
-                mandelbrot();
+                int num = 0;
+                using (StreamReader sr = File.OpenText("colorstate.txt"))
+                {
+                    int s = 0;
+                    while ((s = Convert.ToInt32(sr.ReadLine())) != 0)
+                    {
+                        num = s;
+                    }
+                }
+
+                mandelbrot(num);
                 rectangle = false;
                 update();
             }
@@ -226,7 +247,18 @@ namespace Fractal
             initvalues();
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-            mandelbrot();
+
+            int num = 0;
+            using (StreamReader sr = File.OpenText("colorstate.txt"))
+            {
+                int s = 0;
+                while ((s = Convert.ToInt32(sr.ReadLine())) != 0)
+                {
+                    num = s;
+                }
+            }
+
+            mandelbrot(num);
 
         }
         
